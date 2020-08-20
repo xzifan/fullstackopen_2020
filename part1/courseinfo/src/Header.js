@@ -1,16 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
-class Header extends React.Component{
-    constructor(props) {
-        super(props);
-      }
+const Header = (props) =>{
     
-    render(){
-        return (
-            <h1>{this.props.course}</h1>
-        )
-    }
+    return (
+        <h1>{props.course}</h1>
+    )
         
 }
 

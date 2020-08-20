@@ -1,16 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
-class Total extends React.Component{
-    constructor(props) {
-        super(props);
-      }
-    
-    render(){
-        return (
-            <p>Number of exercises {this.props.exercises1 + this.props.exercises2 + this.props.exercises3}</p>
-        )
-    }
+const Total = (props) => {
+
+    return (
+        <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
+    )
+
         
 }
 
