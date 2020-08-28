@@ -1,17 +1,20 @@
 import React from 'react'
 
 const Content =(props)=>{
+    let part1 = props.part1;
+    let part2 = props.part2;
+    let part3 = props.part3;
 
     return (
         <div>
             <p>
-                {props.part1} {props.exercises1}
+                {part1.name} {part1.exercises}
             </p>
             <p>
-                {props.part2} {props.exercises2}
+                {part2.name} {part2.exercises}
             </p>
             <p>
-                {props.part3} {props.exercises3}
+                {part3.name} {part3.exercises}
             </p>
         </div>
     )
