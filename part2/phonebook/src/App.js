@@ -6,7 +6,6 @@ import axios from 'axios'
 const App = () => {
   const [persons, setPersons] = useState([ ])
   useEffect(()=>{
-    var data = []
     axios.get("http://localhost:3001/persons").then(res=>{
       console.log(res)
       setPersons(res.data)
