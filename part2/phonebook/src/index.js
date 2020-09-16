@@ -1,16 +1,21 @@
 import ReactDOM from 'react-dom';
 import React, { useEffect, useState } from 'react'
 import persons from './services/persons'
-
+import './index.css'
 
 const App = () => {
   const [list, setList] = useState([ ])
+  const [messageType,setMessageType] = useState('success')
+  const [message, setMessage] = useState('some thing happened...')
   useEffect(()=>{
     updateList()
   },[])
-  const updateList = ()=>{
+  const updateList = (type,msg)=>{
     persons.getAll().then(res=>{
       setList(res.data)
+    }).then(()=>{
+      setMessage(msg)
+      setMessageType(type)
     })
   }
 
@@ -19,6 +24,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} type={messageType} />
       <Filter setFilter={setFilter}/>
 
       <h3>Add a new</h3>
@@ -55,11 +61,22 @@ const PersonForm =(props)=>{
       .post({name:name,number:number})
       .then(res=>{
         if (res.status===201){
-          props.updateList()
+          props.updateList("success","Added "+newName)
         }
       }).catch((error) =>{
         console.log(error);
+        
       });
+  }
+  const updateNumber = (id, name, number)=>{
+    let confirm = window.confirm(newName + " is already added to phonebook, replace the old number with a new one?")
+      if (confirm)
+        persons
+          .update(id,{name:name, number:number})
+          .then(props.updateList("success","Updated "+ name))
+          .catch(error=>{
+            props.updateList("error",`Information of ${name} has already been removed from server`)
+          })
   }
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,10 +84,7 @@ const PersonForm =(props)=>{
     if (names.indexOf(newName) === -1) {
       addNumber(newName,newNumber)
     } else {
-      console.log(list[names.indexOf(newName)].id)
-      let confirm = window.confirm(newName + " is already added to phonebook, replace the old number with a new one?")
-      if (confirm)
-        persons.update(list[names.indexOf(newName)].id,{name:newName, number:newNumber}).then(props.updateList())
+      updateNumber(list[names.indexOf(newName)].id, newName, newNumber)
     }
   }
   const handleInput = (e) => {
@@ -102,7 +116,10 @@ const Persons = (props)=>{
     let confirm = window.confirm(`Delete ${name}?`)
     if (confirm)
       persons.deleteItem(id).then(()=>{
-        props.updateList()
+        props.updateList("success","Removed "+name)
+      }).catch(error=>{
+        console.log(error)
+        props.updateList("error",`Information of ${name} has already been removed from server`)
       })
   }
   return <div>
@@ -115,6 +132,17 @@ const Persons = (props)=>{
   </div>
 }
 
+const Notification = ({ type ,message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={''+type}>
+      {message}
+    </div>
+  )
+}
 ReactDOM.render(
     <App />,
   document.getElementById('root')
