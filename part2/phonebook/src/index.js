@@ -7,21 +7,38 @@ import axios from 'axios'
 const App = () => {
   const [persons, setPersons] = useState([ ])
   useEffect(()=>{
+    updateList()
+  },[])
+  const updateList = ()=>{
     axios.get("http://localhost:3001/persons").then(res=>{
-      console.log(res)
       setPersons(res.data)
     })
-  },[])
+  }
+  const addNumber = (name,number)=>{
+    axios
+        .post("http://localhost:3001/persons",{name:name,number:number})
+        .then(res=>{
+          if (res.status===201){
+            updateList()
+          }
+        }).catch((error) =>{
+          console.log(error);
+        });
+  }
+
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter,setFilter] = useState('')
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let names = persons.map((person, i) => person.name)
     if (names.indexOf(newName) === -1) {
-      const copy = [...persons]
-      copy.push({ name: newName, number: newNumber })
-      setPersons(copy)
+      // const copy = [...persons]
+      // copy.push({ name: newName, number: newNumber })
+      // setPersons(copy)
+      addNumber(newName,newNumber)
+
     } else alert(`${newName} is already added to phonebook`)
 
   }
