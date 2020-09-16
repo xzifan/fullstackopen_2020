@@ -1,53 +1,20 @@
 import ReactDOM from 'react-dom';
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-
+import persons from './services/persons'
 
 
 const App = () => {
-  const [persons, setPersons] = useState([ ])
+  const [list, setList] = useState([ ])
   useEffect(()=>{
     updateList()
   },[])
   const updateList = ()=>{
-    axios.get("http://localhost:3001/persons").then(res=>{
-      setPersons(res.data)
+    persons.getAll().then(res=>{
+      setList(res.data)
     })
   }
-  const addNumber = (name,number)=>{
-    axios
-        .post("http://localhost:3001/persons",{name:name,number:number})
-        .then(res=>{
-          if (res.status===201){
-            updateList()
-          }
-        }).catch((error) =>{
-          console.log(error);
-        });
-  }
 
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
   const [filter,setFilter] = useState('')
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    let names = persons.map((person, i) => person.name)
-    if (names.indexOf(newName) === -1) {
-      // const copy = [...persons]
-      // copy.push({ name: newName, number: newNumber })
-      // setPersons(copy)
-      addNumber(newName,newNumber)
-
-    } else alert(`${newName} is already added to phonebook`)
-
-  }
-  const handleInput = (e) => {
-    if (e.target.name === "name")
-      setNewName(e.target.value)
-    else if (e.target.name === "number")
-      setNewNumber(e.target.value)
-  }
 
   return (
     <div>
@@ -56,12 +23,16 @@ const App = () => {
 
       <h3>Add a new</h3>
       <PersonForm 
-        handleSubmit={handleSubmit} 
-        handleInput={handleInput}
+        list={list}
+        updateList={updateList}
       />
 
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={filter}/>
+      <Persons 
+        list={list} 
+        filter={filter} 
+        updateList={updateList}
+      />
     </div>
   )
 }
@@ -76,14 +47,45 @@ const Filter = (props)=>{
 }
 
 const PersonForm =(props)=>{
-
+  let list = props.list
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const addNumber = (name,number)=>{
+    persons
+      .post({name:name,number:number})
+      .then(res=>{
+        if (res.status===201){
+          props.updateList()
+        }
+      }).catch((error) =>{
+        console.log(error);
+      });
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let names = list.map((person, i) => person.name)
+    if (names.indexOf(newName) === -1) {
+      addNumber(newName,newNumber)
+    } else {
+      console.log(list[names.indexOf(newName)].id)
+      let confirm = window.confirm(newName + " is already added to phonebook, replace the old number with a new one?")
+      if (confirm)
+        persons.update(list[names.indexOf(newName)].id,{name:newName, number:newNumber}).then(props.updateList())
+    }
+  }
+  const handleInput = (e) => {
+    if (e.target.name === "name")
+      setNewName(e.target.value)
+    else if (e.target.name === "number")
+      setNewNumber(e.target.value)
+  }
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <div>
-        name: <input name="name" type="text" onChange={props.handleInput} />
+        name: <input name="name" type="text" onChange={handleInput} />
       </div>
       <div>
-        number: <input name="number" type="text" onChange={props.handleInput} />
+        number: <input name="number" type="text" onChange={handleInput} />
       </div>
       <div>
         <button type="submit">add</button>
@@ -93,11 +95,21 @@ const PersonForm =(props)=>{
 }
 
 const Persons = (props)=>{
+  const handleDelete = (e)=>{
+    let id = e.target.value
+    let name = e.target.name
+    console.log(id, name)
+    let confirm = window.confirm(`Delete ${name}?`)
+    if (confirm)
+      persons.deleteItem(id).then(()=>{
+        props.updateList()
+      })
+  }
   return <div>
     {
-        props.persons.map((person, index) => {
+        props.list.map((person, index) => {
           if (person.name.indexOf(props.filter)!==-1)
-            return <div key={index}>{person.name+" "+person.number}</div>
+            return <div key={index}>{person.name+" "+person.number} <button name={person.name} value={person.id} onClick={handleDelete}>delete</button></div>
         })
       }
   </div>
