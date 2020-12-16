@@ -12,6 +12,7 @@ const App = () => {
   },[])
   const updateList = (type,msg)=>{
     persons.getAll().then(res=>{
+      console.log(res.data)
       setList(res.data)
     }).then(()=>{
       setMessage(msg)
@@ -58,7 +59,7 @@ const PersonForm =(props)=>{
   const [newNumber, setNewNumber] = useState('')
   const addNumber = (name,number)=>{
     persons
-      .post({name:name,number:number})
+      .create({name:name,number:number})
       .then(res=>{
         if (res.status===201){
           props.updateList("success","Added "+newName)
