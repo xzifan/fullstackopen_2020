@@ -3,16 +3,23 @@
   "version": "1.0.0",
   "description": "node backend \u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Djs\u001b[C\u001b[D backend",
   "main": "index.js",
+  "engines": {
+    "node": "14.15.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "nodemon index",
+    "build:ui": "rm -rf build && cd ../part2/phonebook && npm run build --prod && cp -r build ../../part3",
+    "start": "node index",
+    "logs:prod": "heroku logs --tail"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "serve": "^11.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
