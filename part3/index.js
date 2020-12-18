@@ -4,6 +4,7 @@ const { format } = require('morgan')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
+const Contact = require('./models/Contact')
 
 app.use(express.json())
 app.use(cors())
@@ -13,85 +14,78 @@ morgan.token('body', (req, res) => {
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-var persons = [
-	{
-		"name": "Arto Hellas",
-		"number": "040-123456",
-		"id": 1
-	},
-	{
-		"name": "Ada Lovelace",
-		"number": "39-44-5323523",
-		"id": 2
-	},
-	{
-		"name": "Dan Abramov",
-		"number": "12-43-234345",
-		"id": 3
-	},
-	{
-		"name": "Mary Poppendieck",
-		"number": "39-23-6423122",
-		"id": 4
-	}
-]
-
-
 app.get('/info', (request, response) => {
 	const datetime = new Date()
 	const text = datetime.toLocaleString('en-us', { dateStyle: "long", weekday: 'short', timeStyle: "full", month: "short", timeZone: "Europe/Helsinki", timeZoneName: "long", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", houryear: "numeric", timeZoneName: "long" })
-	response.send('Phonebook has info for ' + persons.length + ' people</br>' + text)
+	Contact.count({}).then(total =>{
+		response.send('Phonebook has info for ' + persons.length + ' people</br>' + text)
+	});
 })
 
 app.get('/api/persons', (request, response) => {
-	response.contentType('json')
-	response.json(persons)
+	Contact
+        .find({})
+        .then(result => {
+            response.contentType('json')
+			response.json(result)
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-	const id = Number(request.params.id)
-	const match = persons.find(person => person.id === id)
-
-	if (match)
-		response.json(match)
-	else
-		response.status(404).send("Person not found")
+	const id = request.params.id
+	Contact
+		.findById(id)
+		.then(result =>{
+			if (result)
+				response.json(result)
+			else 
+				response.status(404).send("Person not found")
+		}).catch(error => {
+			console.log("Invalid ID")
+			response.status(405).send("Invalid ID value")
+		})
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-	const id = Number(request.params.id)
-	if (!persons.find(person => person.id === id))
-		response.status(404).end("Person not found")	
-	persons = persons.filter(person => person.id !== id)
-	response.status(204).send("Contact removed")
+	const id = request.params.id
+	Contact.findByIdAndDelete(id).then(result=>{
+		console.log(result)
+		response.json(result)
+	}).catch(error => {
+		console.log("Invalid ID")
+		response.status(405).send("Invalid ID value")
+	})
 })
 
 app.post('/api/persons', (request, response) => {
 	if (!request.body.name || !request.body.number)
-		response.status(400).send({ error: "name or number missing " })
-	else if (persons.find(person => person.name === request.body.name))
-		response.status(403).send({ error: 'name must be unique' })
-	else {
-		var newPerson = { ...request.body, id: Math.floor(Math.random() * 1000000) }
-		persons.push(newPerson)
-		response.status(201).send("Contact added!")
-	}
+		response.status(400).json({ error: "name or number missing " })
+	Contact.findOne({name:request.body.name},(err,result)=>{
+		if (result==null){
+			const newPerson = new Contact({...request.body})
+			newPerson.save().then(result=>{
+				response.json(result)
+			})
+		}else response.status(403).send({ result ,error: 'name must be unique' })
+	})
 })
 
 app.put('/api/persons/:id', (request, response) => {
-	const id = Number(request.params.id)
-	const targetIdx = persons.findIndex(person => person.id ===id)
-	if (!persons.find(person => person.id === id))
-		response.status(404).send({error:persons.find(person => person.id === id)})
-	else if (!request.body.name || !request.body.number)
+	const id = request.params.id
+
+	if (!request.body.name || !request.body.number)
 		response.status(400).send({ error: "name or number missing " })
-	else if (persons.find(person => person.name === request.body.name) && persons.findIndex(person => person.name === request.body.name) !== targetIdx)
-		response.status(403).send({ error: 'name must be unique' })
-	else {
-		persons[targetIdx].name = request.body.name
-		persons[targetIdx].number = request.body.number
-		response.status(201).send("contact updated! ID:"+id)
-	}
+	Contact.findOne({name:request.body.name},(err,result)=>{
+		console.log(result)
+		if (!result || (result&&result.id==id))
+			Contact.findByIdAndUpdate(id,{...request.body}).then(result=>{
+				response.json({status:"succeed",original:result,update:request.body})
+			})
+		else
+			response.status(403).send({result , error: 'name must be unique' })
+			
+	})
+	
 })
 
 app.listen(process.env.PORT||3001, () => {
