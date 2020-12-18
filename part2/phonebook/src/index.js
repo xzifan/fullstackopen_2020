@@ -12,7 +12,7 @@ const App = () => {
   },[])
   const updateList = (type,msg)=>{
     persons.getAll().then(res=>{
-      console.log(res.data)
+      // console.log(res.data)
       setList(res.data)
     }).then(()=>{
       setMessage(msg)
@@ -61,9 +61,8 @@ const PersonForm =(props)=>{
     persons
       .create({name:name,number:number})
       .then(res=>{
-        if (res.status===201){
+        if (res.status===200)
           props.updateList("success","Added "+newName)
-        }
       }).catch((error) =>{
         console.log(error);
         
@@ -71,13 +70,18 @@ const PersonForm =(props)=>{
   }
   const updateNumber = (id, name, number)=>{
     let confirm = window.confirm(newName + " is already added to phonebook, replace the old number with a new one?")
-      if (confirm)
-        persons
-          .update(id,{name:name, number:number})
-          .then(props.updateList("success","Updated "+ name))
-          .catch(error=>{
-            props.updateList("error",`Information of ${name} has already been removed from server`)
-          })
+    if (confirm){
+      console.log(id,name,number)
+      persons
+      .update(id,{name:name, number:number})
+      .then(res=>{
+        if (res.status===200)
+          props.updateList("success","Updated "+ name)
+        }).catch(error=>{
+        props.updateList("error",`Information of ${name} has already been removed from server`)
+      })
+    }
+        
   }
   const handleSubmit = (e) => {
     e.preventDefault();
