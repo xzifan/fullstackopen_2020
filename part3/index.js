@@ -56,26 +56,16 @@ app.post('/api/persons', (request, response) => {
 
 	newPerson.save().then(result=>{
 		response.json(result)
-	}).catch(error => response.status(403).send(error.errors))
+	}).catch(error => response.status(403).send(error))
 
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
 	const id = request.params.id
 
-	if (!request.body.name || !request.body.number)
-		response.status(400).send({ error: "name or number missing " })
-	Contact.findOne({name:request.body.name},(err,result)=>{
-		console.log(result)
-		if (!result || (result&&result.id==id))
-			Contact.findByIdAndUpdate(id,{...request.body}).then(result=>{
-				response.json({status:"succeed",original:result,update:request.body})
-			}).catch(error=>next(error))
-		else
-			response.status(403).send({result , error: 'name must be unique' })
-			
-	})
-	
+	Contact.findByIdAndUpdate(id,{id:id,name:request.body.name,number:request.body.number},{runValidators: true, context: 'query'}).then(result=>{
+		response.json({status:"succeed",original:result,update:request.body})
+	}).catch(error=>response.status(403).send(error))
 })
 
 const unknownEndpoint = (request, response) => {
