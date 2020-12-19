@@ -32,6 +32,8 @@ const App = () => {
       <PersonForm 
         list={list}
         updateList={updateList}
+        setMessage={setMessage}
+        setMessageType={setMessageType}
       />
 
       <h3>Numbers</h3>
@@ -64,8 +66,8 @@ const PersonForm =(props)=>{
         if (res.status===200)
           props.updateList("success","Added "+newName)
       }).catch((error) =>{
-        console.log(error);
-        
+        props.setMessage(error.response.data.message)
+        props.setMessageType('error')
       });
   }
   const updateNumber = (id, name, number)=>{
