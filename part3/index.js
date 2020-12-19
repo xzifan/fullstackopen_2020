@@ -31,7 +31,7 @@ app.get('/api/persons', (request, response) => {
         })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
 	const id = request.params.id
 	Contact
 		.findById(id)
@@ -40,24 +40,18 @@ app.get('/api/persons/:id', (request, response) => {
 				response.json(result)
 			else 
 				response.status(404).send("Person not found")
-		}).catch(error => {
-			console.log("Invalid ID")
-			response.status(405).send("Invalid ID value")
-		})
+		}).catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
 	const id = request.params.id
 	Contact.findByIdAndDelete(id).then(result=>{
 		console.log(result)
 		response.json(result)
-	}).catch(error => {
-		console.log("Invalid ID")
-		response.status(405).send("Invalid ID value")
-	})
+	}).catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
 	if (!request.body.name || !request.body.number)
 		response.status(400).json({ error: "name or number missing " })
 	Contact.findOne({name:request.body.name},(err,result)=>{
@@ -65,12 +59,12 @@ app.post('/api/persons', (request, response) => {
 			const newPerson = new Contact({...request.body})
 			newPerson.save().then(result=>{
 				response.json(result)
-			})
+			}).catch(error => next(error))
 		}else response.status(403).send({ result ,error: 'name must be unique' })
 	})
 })
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
 	const id = request.params.id
 
 	if (!request.body.name || !request.body.number)
@@ -80,13 +74,32 @@ app.put('/api/persons/:id', (request, response) => {
 		if (!result || (result&&result.id==id))
 			Contact.findByIdAndUpdate(id,{...request.body}).then(result=>{
 				response.json({status:"succeed",original:result,update:request.body})
-			})
+			}).catch(error=>next(error))
 		else
 			response.status(403).send({result , error: 'name must be unique' })
 			
 	})
 	
 })
+
+const unknownEndpoint = (request, response) => {
+	response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+  // handler of requests with unknown endpoint
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+	console.error(error.message)
+  
+	if (error.name === 'CastError') {
+	  return response.status(400).send({ error: 'malformatted id' })
+	} 
+  
+	next(error)
+  }
+  
+app.use(errorHandler)
 
 app.listen(process.env.PORT||3001, () => {
 	console.log('Server running on port ' +(process.env.PORT || "3001"))
