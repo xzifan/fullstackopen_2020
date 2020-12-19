@@ -80,7 +80,9 @@ const PersonForm =(props)=>{
         if (res.status===200)
           props.updateList("success","Updated "+ name)
         }).catch(error=>{
-        props.updateList("error",`Information of ${name} has already been removed from server`)
+          console.log(error.response.data)
+          props.setMessage(error.response.data.message)
+          props.setMessageType('error')
       })
     }
         
