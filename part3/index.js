@@ -51,17 +51,13 @@ app.delete('/api/persons/:id', (request, response, next) => {
 	}).catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response, next) => {
-	if (!request.body.name || !request.body.number)
-		response.status(400).json({ error: "name or number missing " })
-	Contact.findOne({name:request.body.name},(err,result)=>{
-		if (result==null){
-			const newPerson = new Contact({...request.body})
-			newPerson.save().then(result=>{
-				response.json(result)
-			}).catch(error => next(error))
-		}else response.status(403).send({ result ,error: 'name must be unique' })
-	})
+app.post('/api/persons', (request, response) => {
+	const newPerson = new Contact({...request.body})
+
+	newPerson.save().then(result=>{
+		response.json(result)
+	}).catch(error => response.status(403).send(error.errors))
+
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
