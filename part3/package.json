@@ -11,7 +11,8 @@
     "dev": "nodemon index",
     "build:ui": "rm -rf build && cd ../part2/phonebook && npm run build --prod && cp -r build ../../part3",
     "start": "node index",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "serve": "^11.3.2"
   },
   "devDependencies": {
+    "eslint": "^7.16.0",
     "nodemon": "^2.0.6"
   }
 }
