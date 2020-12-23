@@ -55,22 +55,6 @@ test('a specific blog can be viewed', async () => {
     expect(result.body).toEqual(processedBlog)
 })
 
-test('a specific blog can be deleted', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const deleteBlog = blogsAtStart[0]
-    console.log(blogsAtStart[0],"delete",deleteBlog)
-
-    await api
-        .delete(`/api/blogs/${deleteBlog.id}`)
-        .expect(204)
-
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
-
-    const titles = blogsAtEnd.map(b => b.title)
-
-    expect(titles).not.toContain(deleteBlog.title)
-})
 describe('test adding a blog',()=>{
     test('blogs should be created with http POST requests', async () => {
         const newBlog = {
@@ -116,6 +100,61 @@ describe('test adding a blog',()=>{
         }).expect(400)
 
         await api.post('/api/blogs').send({}).expect(400)
+    })
+})
+
+describe('deleting a blog',()=>{
+    test('a specific existing blog can be deleted', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const deleteBlog = blogsAtStart[0]
+    
+        await api
+            .delete(`/api/blogs/${deleteBlog.id}`)
+            .expect(204)
+    
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+    
+        const titles = blogsAtEnd.map(b => b.title)
+    
+        expect(titles).not.toContain(deleteBlog.title)
+    })
+    test('respond with 404 if the specified blog does not exist', async ()=>{
+        const id = await helper.nonExistingId()
+        await api
+            .delete(`/api/blogs/${id}`)
+            .expect(404)
+    })
+})
+
+describe('updating a blog',()=>{
+    test('the likes of a specific existing blog can be increased', async()=>{
+        const blogsAtStart = await helper.blogsInDb()
+        const blog = blogsAtStart[0]
+        const update = {
+            likes:blog.likes+1
+        }
+        await api
+            .put(`/api/blogs/${blog.id}`)
+            .send(update)
+            .expect(200)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd[0].likes).toBe(update.likes)
+    })
+    test('the title of a specific existing blog can be updated', async()=>{
+        const blogsAtStart = await helper.blogsInDb()
+        const blog = blogsAtStart[0]
+        const update = {
+            title:'new title for the blog'
+        }
+        await api
+            .put(`/api/blogs/${blog.id}`)
+            .send(update)
+            .expect(200)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd[0].title).toBe(update.title)
     })
 })
 afterAll(async () => {

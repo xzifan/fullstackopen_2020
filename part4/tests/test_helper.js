@@ -44,7 +44,7 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 const nonExistingId = async () => {
-    const blog = new Blog({ title: 'willremovethissoon' })
+    const blog = new Blog({ title: 'willremovethissoon', url:'url'})
     await blog.save()
     await blog.remove()
   
