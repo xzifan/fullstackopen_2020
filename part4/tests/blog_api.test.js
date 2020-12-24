@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./test_helper')
@@ -5,6 +6,7 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -56,6 +58,18 @@ test('a specific blog can be viewed', async () => {
 })
 
 describe('test adding a blog',()=>{
+    let token = null
+    beforeAll(async () => {
+        await User.deleteMany({})
+    
+        const passwordHash = await bcrypt.hash('password', 10)
+        const user = new User({ username: 'root', passwordHash })
+    
+        await user.save()
+
+        const res = await api.post('/api/login').send({ username: 'root', password: 'password' })
+        token = res.body.token
+    })
     test('blogs should be created with http POST requests', async () => {
         const newBlog = {
             title: 'async/await simplifies making async calls',
@@ -65,6 +79,7 @@ describe('test adding a blog',()=>{
         }
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(200)
     
@@ -84,6 +99,7 @@ describe('test adding a blog',()=>{
         }
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(200)
 
@@ -91,15 +107,15 @@ describe('test adding a blog',()=>{
         expect(blogs[helper.initialBlogs.length].likes).toBe(0)
     })
     test('400 Bad Request for objects with undefined url or title', async()=>{
-        await api.post('/api/blogs').send({
+        await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send({
             title:'a blog with no url'
         }).expect(400)
 
-        await api.post('/api/blogs').send({
+        await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send({
             url:'www.ablogwithouttitle.com'
         }).expect(400)
 
-        await api.post('/api/blogs').send({}).expect(400)
+        await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send({}).expect(400)
     })
 })
 
