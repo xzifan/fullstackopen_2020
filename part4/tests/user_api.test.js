@@ -7,6 +7,30 @@ const api = supertest(app)
 
 const User = require('../models/user')
 
+test('creation fails with proper statuscode and message if no password provided', async ()=>{
+    const newUser = {
+      name: 'Superuser',
+      username: 'user'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+})
+
+test('creation fails with proper statuscode and message if no username provided', async ()=>{
+    const newUser = {
+      name: 'Superuser',
+      password: 'password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+})
+
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
