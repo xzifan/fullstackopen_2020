@@ -28,7 +28,7 @@ blogsRouter.get('/:id', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     // const token = getTokenFrom(request)
     if (!request.token){
-        return response.status(401).json({error:"Token missing"})
+        return response.status(401).json({error:'Token missing'})
     }
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
@@ -49,7 +49,7 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
     if (!request.token){
-        return response.status(401).json({error:"Token missing"})
+        return response.status(401).json({error:'Token missing'})
     }
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
@@ -68,7 +68,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 
 blogsRouter.put('/:id', async (request, response) => {
     if (!request.token){
-        return response.status(401).json({error:"Token missing"})
+        return response.status(401).json({error:'Token missing'})
     }
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
