@@ -28,10 +28,11 @@ const App = () => {
       blogService.setToken(user.token)
     }else setUser(null)
   }, [])
-  const updateList = ()=>{
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+  const updateList = async ()=>{
+    var res = await blogService.getAll()
+    console.log(res)
+    res.sort((a,b)=>b.likes-a.likes)
+    setBlogs(res)
   }
   const showPrompt = (type,text)=>{
     setPrompt({type,text})
@@ -102,6 +103,20 @@ const App = () => {
       showPrompt('error',error.response.data.error||error)
     }
   }
+
+  const likeIncrement = async (e,id,update)=>{
+    e.preventDefault()
+    console.log(id)
+    try {
+      const res = await blogService.update(id,update)
+      console.log(res)
+      showPrompt('success',`You liked ${update.title} by ${update.author}`)
+      updateList()
+    } catch(error){
+      showPrompt('error',error.response.data.error||error)
+    }
+  }
+  
   const promptObject =()=> <div className={prompt.type}>{prompt.text}</div>
 
   const loginForm = () =>
@@ -137,7 +152,7 @@ const App = () => {
             <p>{useraccount.name} logged in <button onClick={handleLogout}>log out</button></p>
             {blogForm()}
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
+              <Blog key={blog.id} blog={blog} onClickLike={likeIncrement} />
             )}
           </div>
         }
