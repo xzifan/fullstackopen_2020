@@ -115,13 +115,15 @@ const App = () => {
     </Togglable>
   const blogFormRef = useRef()
   const blogForm = () => 
-    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm
-        onSubmit={handleCreate}
-        handleChange={handleChange}
-        newBlog={{title,author,url}}
-      />
-    </Togglable>
+    <div className='create'>
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+        <BlogForm
+          onSubmit={handleCreate}
+          handleChange={handleChange}
+          newBlog={{title,author,url}}
+        />
+      </Togglable>
+    </div>
   
                     
   return (
