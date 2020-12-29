@@ -22,16 +22,21 @@ const create = async newObject => {
     headers: { Authorization: token },
   }
 
-  const response = await axios.post(baseUrl+'blogs', newObject, config)
-  return response.data
+  // try{
+    const response = await axios.post(baseUrl+'blogs', newObject, config)
+    return response.data
+  // } catch(error){
+  //   return error.response.data
+  // }
+  
 }
 
-const update = (id, newObject) => {
+const update = async (id, newObject) => {
   const config = {
     headers: { Authorization: token },
   }
-  const request = axios.put(`${ baseUrl }blogs/${id}`, newObject, config)
-  return request.then(response => response.data)
+  const response = await axios.put(`${ baseUrl }blogs/${id}`, newObject, config)
+  return response.data
 }
 
 export default { getAll, login, create, update, setToken }

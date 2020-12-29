@@ -12,3 +12,19 @@
   margin-bottom: 1rem;
   display: block;
 }
+
+.error{
+  color: red;
+}
+.success{
+  color: green;
+}
+
+.error,.success {
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
