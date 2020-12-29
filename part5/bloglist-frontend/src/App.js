@@ -4,7 +4,7 @@ import blogService from './services/blogs'
 import './App.css'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
-import BlogForm from './components/BlogFrom'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -115,7 +115,7 @@ const App = () => {
     </Togglable>
   const blogFormRef = useRef()
   const blogForm = () => 
-    <Togglable buttonLabel="new note" ref={blogFormRef}>
+    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
       <BlogForm
         onSubmit={handleCreate}
         handleChange={handleChange}

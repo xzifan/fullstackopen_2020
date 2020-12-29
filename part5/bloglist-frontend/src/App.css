@@ -28,3 +28,8 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.blogItem{
+  line-height: 2rem;
+  border: solid 1px;
+}
