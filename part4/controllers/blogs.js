@@ -77,7 +77,7 @@ blogsRouter.put('/:id', async (request, response) => {
     const user = await User.findById(decodedToken.id)
     const item = await Blog.findById(request.params.id)
     if(item){
-        if (user._id.toString() === item.user.toString()){
+        if (user._id.toString() === item.user.toString() || (request.body.title===item.title&&request.body.author===item.author&&request.body.url===item.url)){
             let res = await Blog.findByIdAndUpdate(request.params.id, request.body)
             response.status(200).json(res)
         }else response.status(400).json({error:'No acess to modify this blog'})
