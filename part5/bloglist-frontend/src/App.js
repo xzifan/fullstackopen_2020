@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef  } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import './App.css'
-
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogFrom'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,7 +15,7 @@ const App = () => {
   const [author, setAuthor] = useState([])
   const [url, setUrl] = useState([])
   const [prompt,setPrompt] = useState([])
-
+  
   useEffect(() => {
     updateList()
   }, [])
@@ -70,7 +72,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       ) 
-      showPrompt({type:'success',text:'Login succeed!'})
+      showPrompt('success','Login succeed!')
       setUser(user)
       setUsername('')
       setPassword('')
@@ -83,51 +85,61 @@ const App = () => {
     window.location.reload()
   }
 
+
   const handleCreate = async(e)=>{
     e.preventDefault();
     try {
-      const res = await blogService.create({
+      await blogService.create({
         author, title, url
       })
-      console.log(res)
+      blogFormRef.current.toggleVisibility()
       showPrompt('success',`a new blog ${title} by ${author} added`)
       updateList()
       setTitle('')
       setUrl('')
       setAuthor('')
     } catch (error) {
-      showPrompt('error',error.response.data.error)
+      showPrompt('error',error.response.data.error||error)
     }
   }
-  const promptObject = <div className={prompt.type}>{prompt.text}</div>
-  const loginForm = <form className='form' onSubmit={handleLogin}>
-                      <h2>log in to application</h2>
-                      {promptObject}
-                      <label>username<input type='text' name='username' onChange={handleChange} /></label>
-                      <label>password<input type='password' name='password' onChange={handleChange} /></label>
-                      <input type="submit" value='submit'/>
-                    </form>
-  const creationForm = <form className='form' onSubmit={handleCreate}>
-                        <h2>create new</h2>
-                        <label>title:<input type='text' name='title' onChange={handleChange} /></label>
-                        <label>author:<input type='text' name='author' onChange={handleChange} /></label>
-                        <label>url:<input type='text' name='url' onChange={handleChange} /></label>
-                        <input type="submit" value='create'/>
-                      </form>
-  const bloglist = <div>
-                    <div className='blogs'>
-                      <h2>blogs</h2>
-                      {promptObject}
-                      <span className='user'>{useraccount==null?'':useraccount.name} logged in  <button onClick={handleLogout}>log out</button></span>
-                      {creationForm}
-                      {blogs.map(blog =>
-                        <Blog key={blog.id} blog={blog} />
-                      )}
-                    </div>     
-                  </div>
+  const promptObject =()=> <div className={prompt.type}>{prompt.text}</div>
+
+  const loginForm = () =>
+    <Togglable buttonLabel='login' >
+      <LoginForm
+        handleChange={handleChange}
+        handleLogin={handleLogin}
+        username={username}
+        password={password}
+      />
+    </Togglable>
+  const blogFormRef = useRef()
+  const blogForm = () => 
+    <Togglable buttonLabel="new note" ref={blogFormRef}>
+      <BlogForm
+        onSubmit={handleCreate}
+        handleChange={handleChange}
+        newBlog={{title,author,url}}
+      />
+    </Togglable>
+  
+                    
   return (
     <div>
-      {useraccount==null? loginForm : bloglist}
+      <div className='blogs'>
+        <h1>blogs</h1>
+        {promptObject()}
+        {useraccount === null ?
+          loginForm() :
+          <div>
+            <p>{useraccount.name} logged in <button onClick={handleLogout}>log out</button></p>
+            {blogForm()}
+            {blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} />
+            )}
+          </div>
+        }
+      </div>     
     </div>
   )
 }
