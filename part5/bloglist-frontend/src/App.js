@@ -106,15 +106,25 @@ const App = () => {
 
   const likeIncrement = async (e,id,update)=>{
     e.preventDefault()
-    console.log(id)
     try {
-      const res = await blogService.update(id,update)
-      console.log(res)
+      await blogService.update(id,update)
       showPrompt('success',`You liked ${update.title} by ${update.author}`)
       updateList()
     } catch(error){
       showPrompt('error',error.response.data.error||error)
     }
+  }
+
+  const handleDel = async (e,id, title, author)=>{
+    e.preventDefault()
+    if (window.confirm(`Remove blog ${title} by ${author}`))
+      try {
+        await blogService.remove(id)
+        showPrompt('success',`Blog ${title} by ${author} is removed`)
+        updateList()
+      } catch(error) {
+        showPrompt('error',error.response.data.error||error)
+      }
   }
   
   const promptObject =()=> <div className={prompt.type}>{prompt.text}</div>
@@ -152,7 +162,7 @@ const App = () => {
             <p>{useraccount.name} logged in <button onClick={handleLogout}>log out</button></p>
             {blogForm()}
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} onClickLike={likeIncrement} />
+              <Blog key={blog.id} blog={blog} onClickLike={likeIncrement} onClickDel={handleDel}/>
             )}
           </div>
         }
