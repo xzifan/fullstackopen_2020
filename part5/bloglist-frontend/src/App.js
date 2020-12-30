@@ -15,7 +15,7 @@ const App = () => {
   const [author, setAuthor] = useState([])
   const [url, setUrl] = useState([])
   const [prompt,setPrompt] = useState([])
-  
+
   useEffect(() => {
     updateList()
   }, [])
@@ -28,43 +28,43 @@ const App = () => {
       blogService.setToken(user.token)
     }else setUser(null)
   }, [])
-  const updateList = async ()=>{
+  const updateList = async () => {
     var res = await blogService.getAll()
     console.log(res)
-    res.sort((a,b)=>b.likes-a.likes)
+    res.sort((a,b) => b.likes-a.likes)
     setBlogs(res)
   }
-  const showPrompt = (type,text)=>{
-    setPrompt({type,text})
+  const showPrompt = (type,text) => {
+    setPrompt({ type,text })
     setTimeout(() => {
       setPrompt({})
-    }, 5000);
+    }, 5000)
   }
-  const handleChange = (e)=>{
+  const handleChange = (e) => {
     var val = e.target.value
     switch(e.target.name) {
-      case 'username':
-        setUsername(val)
-        break
-      case 'password':
-        setPassword(val)
-        break
-      case 'title':
-        setTitle(val)
-        break
-      case 'author':
-        setAuthor(val)
-        break
-      case 'url':
-        setUrl(val)
-        break
-      default:
+    case 'username':
+      setUsername(val)
+      break
+    case 'password':
+      setPassword(val)
+      break
+    case 'title':
+      setTitle(val)
+      break
+    case 'author':
+      setAuthor(val)
+      break
+    case 'url':
+      setUrl(val)
+      break
+    default:
 
     }
   }
 
-  const handleLogin = async (e)=>{
-    e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault()
     try {
       const user = await blogService.login({
         username, password,
@@ -72,7 +72,7 @@ const App = () => {
       console.log(user)
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
-      ) 
+      )
       showPrompt('success','Login succeed!')
       setUser(user)
       setUsername('')
@@ -81,14 +81,14 @@ const App = () => {
       showPrompt('error',error.response.data.error)
     }
   }
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
     window.location.reload()
   }
 
 
-  const handleCreate = async(e)=>{
-    e.preventDefault();
+  const handleCreate = async(e) => {
+    e.preventDefault()
     try {
       await blogService.create({
         author, title, url
@@ -104,7 +104,7 @@ const App = () => {
     }
   }
 
-  const likeIncrement = async (e,id,update)=>{
+  const likeIncrement = async (e,id,update) => {
     e.preventDefault()
     try {
       await blogService.update(id,update)
@@ -115,7 +115,7 @@ const App = () => {
     }
   }
 
-  const handleDel = async (e,id, title, author)=>{
+  const handleDel = async (e,id, title, author) => {
     e.preventDefault()
     if (window.confirm(`Remove blog ${title} by ${author}`))
       try {
@@ -126,8 +126,8 @@ const App = () => {
         showPrompt('error',error.response.data.error||error)
       }
   }
-  
-  const promptObject =()=> <div className={prompt.type}>{prompt.text}</div>
+
+  const promptObject =() => <div className={prompt.type}>{prompt.text}</div>
 
   const loginForm = () =>
     <Togglable buttonLabel='login' >
@@ -139,18 +139,18 @@ const App = () => {
       />
     </Togglable>
   const blogFormRef = useRef()
-  const blogForm = () => 
+  const blogForm = () =>
     <div className='create'>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm
           onSubmit={handleCreate}
           handleChange={handleChange}
-          newBlog={{title,author,url}}
+          newBlog={{ title,author,url }}
         />
       </Togglable>
     </div>
-  
-                    
+
+
   return (
     <div>
       <div className='blogs'>
@@ -166,7 +166,7 @@ const App = () => {
             )}
           </div>
         }
-      </div>     
+      </div>
     </div>
   )
 }

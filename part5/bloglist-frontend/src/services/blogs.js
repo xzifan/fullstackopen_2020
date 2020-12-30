@@ -12,7 +12,7 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
-const login = async (credentials) =>{
+const login = async (credentials) => {
   const response = await axios.post(baseUrl+'login',credentials)
   return response.data
 }
@@ -23,12 +23,12 @@ const create = async newObject => {
   }
 
   // try{
-    const response = await axios.post(baseUrl+'blogs', newObject, config)
-    return response.data
+  const response = await axios.post(baseUrl+'blogs', newObject, config)
+  return response.data
   // } catch(error){
   //   return error.response.data
   // }
-  
+
 }
 
 const update = async (id, newObject) => {
@@ -39,7 +39,7 @@ const update = async (id, newObject) => {
   return response.data
 }
 
-const remove = async (id) =>{
+const remove = async (id) => {
   const config = {
     headers: { Authorization: token },
   }
