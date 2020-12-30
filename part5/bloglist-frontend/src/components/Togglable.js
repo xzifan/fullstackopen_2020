@@ -17,8 +17,8 @@ const Togglable = React.forwardRef((props, ref) => {
   })
   return (
     <React.Fragment >
-      <button style={hideWhenVisible} className='toggleButton' onClick={toggleVisibility}>{props.buttonLabel}</button>
-      <button style={showWhenVisible} className='toggleButton' onClick={toggleVisibility}>{props.cancelLabel ||'cancel'}</button>
+      <button style={hideWhenVisible} className='toggleButton show' onClick={toggleVisibility}>{props.buttonLabel}</button>
+      <button style={showWhenVisible} className='toggleButton hide' onClick={toggleVisibility}>{props.cancelLabel ||'cancel'}</button>
       {visible? props.children:''}
     </React.Fragment >
   )
