@@ -100,7 +100,7 @@ const App = () => {
       setUrl('')
       setAuthor('')
     } catch (error) {
-      showPrompt('error',error.response.data.error||error)
+      showPrompt('error',error.response.data)
     }
   }
 
@@ -127,7 +127,7 @@ const App = () => {
       }
   }
 
-  const promptObject =() => <div className={prompt.type}>{prompt.text}</div>
+  const promptObject = <div className={prompt.type}>{prompt.text}</div>
 
   const loginForm = () =>
     <Togglable buttonLabel='login' >
@@ -155,15 +155,17 @@ const App = () => {
     <div>
       <div className='blogs'>
         <h1>blogs</h1>
-        {promptObject()}
+        <div>{promptObject}</div>
         {useraccount === null ?
           loginForm() :
           <div>
-            <p>{useraccount.name} logged in <button onClick={handleLogout}>log out</button></p>
+            <p>{useraccount.name} logged in <button className='btnLogout' onClick={handleLogout}>log out</button></p>
             {blogForm()}
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} onClickLike={likeIncrement} onClickDel={handleDel}/>
-            )}
+            <div className='blogList'>
+              {blogs.map(blog =>
+                <Blog key={blog.id} blog={blog} onClickLike={likeIncrement} onClickDel={handleDel}/>
+              )}
+            </div>
           </div>
         }
       </div>
