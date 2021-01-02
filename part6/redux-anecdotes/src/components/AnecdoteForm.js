@@ -1,11 +1,13 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import {addAnecdote} from '../reducers/anecdoteReducer'
 
 
-const Form = (props) => {
+const Form = () => {
+    const dispatch = useDispatch()
     const add = (e) =>{
         e.preventDefault()
-        props.store.dispatch(addAnecdote(e.target.content.value))
+        dispatch(addAnecdote(e.target.content.value))
         e.target.content.value = ''
     }
     

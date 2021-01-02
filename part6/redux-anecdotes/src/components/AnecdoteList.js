@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { voteFor } from '../reducers/anecdoteReducer'
 
-const AnecdoteList = (props)=>{
-    const [anecdotes,setAnecdotes] = useState(props.store.getState())
+const AnecdoteList = ()=>{
+    const anecdotes = useSelector(state=>state)
+    const dispatch = useDispatch()
     const vote = (id) => {
-        console.log(props.store.getState())
-        props.store.dispatch(voteFor(id))
-        setAnecdotes(props.store.getState())
+        dispatch(voteFor(id))
     }
     return (
         <div>
