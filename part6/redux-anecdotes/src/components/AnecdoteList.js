@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { voteFor } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = (props)=>{
