@@ -43,9 +43,10 @@ export const initialize = () => {
 export const addAnecdote = (data)=>{
     return async dispatch => {
         const newItem = await anecdoteService.create(data)
+        console.log(newItem,data)
         dispatch({
             type:'ADD',
-            newItem
+            data:newItem
         })
     }
 }
