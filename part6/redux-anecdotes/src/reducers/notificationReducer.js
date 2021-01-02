@@ -1,7 +1,9 @@
 const notificationReducer = (state = '', action)=>{
     // console.log('notificationReducer',state,action)
-    if (action.type ==='SET')
-        return action.notification
+    if (action.type ==='SET'){
+        clearTimeout(state.timer)
+        return action.data
+    }
     else if (action.type === 'RESET')
         return ''
        
@@ -11,11 +13,13 @@ export const setNotification = (notification,time=5)=>{
     return async (dispatch) =>{
         dispatch({
             type: 'SET',
-            notification
+            data:{
+                content:notification,
+                timer:setTimeout(() => {
+                        dispatch(resetNotification())
+                    }, time*1000)
+            }
         })
-        setTimeout(() => {
-            dispatch(resetNotification())
-        }, time*1000)
     }
 }
 export const resetNotification = ()=>{

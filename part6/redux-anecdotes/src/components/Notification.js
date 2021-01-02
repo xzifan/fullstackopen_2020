@@ -12,7 +12,7 @@ const Notification = () => {
         return null
     else return (
         <div style={style}>
-            {notification}
+            {notification.content}
         </div>
     )
 }

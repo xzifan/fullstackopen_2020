@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import {addAnecdote} from '../reducers/anecdoteReducer'
 import {setNotification, resetNotification} from '../reducers/notificationReducer'
 
@@ -27,4 +28,12 @@ const Form = () => {
     )
 }
 
-export default Form
+const mapStateToProps = (state) => {
+    return {
+        anecdotes: state.anecdotes,
+        filter: state.filter,
+        notification: state.notification
+    }
+}
+const ConnectedForm = connect(mapStateToProps)(Form)
+export default ConnectedForm
