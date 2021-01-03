@@ -40,3 +40,8 @@ button{
   display: flex;
   flex-direction: column-reverse;
 }
+
+.loginbox{
+  display: flex;
+  flex-direction: column-reverse;
+}
