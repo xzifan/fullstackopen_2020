@@ -115,17 +115,15 @@ const App = (props) => {
   ])
 
   const [notification, setNotification] = useState('')
-  const [display, setDisplay] = useState(false)
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
     showNotification(anecdote.content)
   }
   const showNotification = (content)=>{
-    setDisplay(true)
     setNotification(`a new anecdote ${content} created!`)
     setTimeout(() => {
-      setDisplay(false)
+      setNotification('')
     }, 10000);
   }
   const anecdoteById = (id) =>
@@ -147,7 +145,7 @@ const App = (props) => {
       <div>
         <h1>Software anecdotes</h1>
         <Menu/>
-        <div style={{display:display}}>{notification}</div>
+        <div>{notification}</div>
       </div>
         <Switch>
           <Route path='/' exact><AnecdoteList anecdotes={anecdotes}/></Route>
