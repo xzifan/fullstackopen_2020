@@ -12,8 +12,8 @@ const BlogForm = () => {
     try{
       dispatch(addBlog(form))
       dispatch(setNotification('success',`a new blog ${form.title} by ${form.author} added`))
-      // blogFormRef.current.toggleVisibility()
-      // setForm({title:'',author:'',url:''})
+      blogFormRef.current.toggleVisibility()
+      setForm({title:'',author:'',url:''})
     }catch(error){
       dispatch(setNotification('error',error.response.data))
     }
