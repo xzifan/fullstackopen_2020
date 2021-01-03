@@ -9,19 +9,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from './reducers/loginReducer'
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([])
-  // const [username, setUsername] = useState([])
-  // const [password, setPassword] = useState([])
-  // const [useraccount, setUser] = useState([])
   const useraccount = useSelector(({user})=>user)
-  // const [title, setTitle] = useState([])
-  // const [author, setAuthor] = useState([])
-  // const [url, setUrl] = useState([])
-  // const [prompt,setPrompt] = useState([])
-
   const dispatch = useDispatch()
   useEffect(() => {
-    // updateList()
     dispatch(init())
   }, [dispatch])
   
@@ -87,66 +77,8 @@ const App = () => {
   //   }
   // }
   const handleLogout = () => {
-    // window.localStorage.removeItem('loggedUser')
-    // window.location.reload()
     dispatch(logout())
   }
-
-
-  // const handleCreate = async(e) => {
-  //   e.preventDefault()
-  //   try {
-  //     await blogService.create({
-  //       author, title, url
-  //     })
-  //     blogFormRef.current.toggleVisibility()
-  //     showPrompt('success',`a new blog ${title} by ${author} added`)
-  //     updateList()
-  //     setTitle('')
-  //     setUrl('')
-  //     setAuthor('')
-  //   } catch (error) {
-  //     showPrompt('error',error.response.data)
-  //   }
-  // }
-
-  // const likeIncrement = async (e,id,update) => {
-  //   e.preventDefault()
-  //   try {
-  //     await blogService.update(id,update)
-  //     showPrompt('success',`You liked ${update.title} by ${update.author}`)
-  //     updateList()
-  //   } catch(error){
-  //     showPrompt('error',error.response.data.error||error)
-  //   }
-  // }
-
-  // const handleDel = async (e,id, title, author) => {
-  //   e.preventDefault()
-  //   if (window.confirm(`Remove blog ${title} by ${author}`))
-  //     try {
-  //       await blogService.remove(id)
-  //       showPrompt('success',`Blog ${title} by ${author} is removed`)
-  //       updateList()
-  //     } catch(error) {
-  //       showPrompt('error',error.response.data.error||error)
-  //     }
-  // }
-
-  // const promptObject = <div className={prompt.type}>{prompt.text}</div>
-
-  // const loginForm = () =>
-  //   <div className='loginbox'>
-  //     <LoginForm/>
-  //   </div>
-  // const blogFormRef = useRef()
-  // const blogForm = () =>
-  //   <div className='create'>
-  //     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-  //       <BlogForm/>
-  //     </Togglable>
-  //   </div>
-
 
   return (
     <div>
