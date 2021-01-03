@@ -15,9 +15,14 @@ const LoginForm = () => {
   }
   const handleLogin = (e)=>{
     e.preventDefault()
-    dispatch(login(form.username,form.password))
-    dispatch(setNotification('success','Login succeed!'))
-    setForm({username:'',password:''})
+    try{
+      dispatch(login(form.username,form.password))
+      dispatch(setNotification('success','Login succeed!'))
+      setForm({username:'',password:''})
+    }catch(error){
+      dispatch(setNotification('error',error.response.data.error))
+    }
+    
   }
   return (
     <Togglable buttonLabel='login' >
