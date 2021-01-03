@@ -1,0 +1,42 @@
+.form{
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+}
+
+button{
+  width: fit-content;
+  text-align: center;
+}
+.user{
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.error{
+  color: red;
+}
+.success{
+  color: green;
+}
+
+.error,.success {
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.blogItem{
+  line-height: 1.5rem;
+  border: solid 1px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.create{
+  display: flex;
+  flex-direction: column-reverse;
+}
