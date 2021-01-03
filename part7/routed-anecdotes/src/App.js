@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Switch, Route, Link, useParams, useHistory } from 'react-router-dom'
+import './hooks'
+import { useAnecdoteForm } from './hooks'
+
 const Menu = () => {
   const padding = {
     paddingRight: 5
@@ -65,31 +68,32 @@ const CreateNew = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content:anecdoteForm.content,
+      author:anecdoteForm.author,
+      info:anecdoteForm.info,
       votes: 0
     })
     history.push('/')
   }
-
+  
+  const anecdoteForm = useAnecdoteForm(props.anecdotes)
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' value={anecdoteForm.content} onChange={anecdoteForm.onChange} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' value={anecdoteForm.author} onChange={anecdoteForm.onChange} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input name='info' value={anecdoteForm.info} onChange={anecdoteForm.onChange} />
         </div>
-        <button type='submit'>create</button>
+        <button type='submit'>create</button> <button type='reset' onClick={anecdoteForm.clearForm}>clear</button>
       </form>
     </div>
   )
@@ -150,7 +154,7 @@ const App = (props) => {
         <Switch>
           <Route path='/' exact><AnecdoteList anecdotes={anecdotes}/></Route>
           <Route path='/anecdotes/:id'><Anecdote anecdotes={anecdotes}/></Route>
-          <Route path='/create'><CreateNew addNew={addNew}/></Route>
+          <Route path='/create'><CreateNew addNew={addNew} anecdotes={anecdotes}/></Route>
           <Route path='/about'><About/></Route>
         </Switch>
         
