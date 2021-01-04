@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import {addBlog} from '../reducers/blogReducers'
+import {addBlog} from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 import Togglable from './Togglable'
 import {set as setNotification } from '../reducers/notificationReducer'

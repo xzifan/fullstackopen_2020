@@ -1,7 +1,7 @@
 import React from 'react'
 import Togglable from './Togglable'
 import { useDispatch } from 'react-redux'
-import { deleteBlog, likeBlog } from '../reducers/blogReducers'
+import { deleteBlog, likeBlog } from '../reducers/blogReducer'
 import { set as setNotification} from '../reducers/notificationReducer'
 
 const Blog = ({ blog }) => {
