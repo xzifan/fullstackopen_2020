@@ -3,6 +3,7 @@ import Togglable from './Togglable'
 import { useDispatch } from 'react-redux'
 import { deleteBlog, likeBlog } from '../reducers/blogReducer'
 import { set as setNotification} from '../reducers/notificationReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
     const dispatch = useDispatch()
@@ -27,13 +28,13 @@ const Blog = ({ blog }) => {
     }
     return (
     <div className='blogItem'>
-      <span className='title'>{blog.title} </span>
-      <Togglable buttonLabel='view' cancelLabel='hide'>
+      <Link className='title' to={`/blogs/${blog.id}`} >{blog.title} </Link>
+      {/* <Togglable buttonLabel='view' cancelLabel='hide'>
         <div className='url'>{blog.url}</div>
         <div className='likes' data-likes={blog.likes}>likes {blog.likes} <button onClick={(e) => {onClickLike(e,blog.id,{ title:blog.title, author:blog.author, url:blog.url,likes:blog.likes+1 })}}>like</button></div>
         <div className='author'>{blog.author}</div>
         <button className='btnDelete' onClick={(e) => {onClickDel(e,blog.id,blog.title,blog.author)}}>delete</button>
-      </Togglable>
+      </Togglable> */}
     </div>)
   }
   

@@ -47,4 +47,9 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, login, create, update, setToken, remove }
+const allUsers = async () =>{
+  const  res = await axios.get(`${baseUrl}users`)
+  return res.data
+}
+
+export default { getAll, login, create, update, setToken, remove, allUsers }

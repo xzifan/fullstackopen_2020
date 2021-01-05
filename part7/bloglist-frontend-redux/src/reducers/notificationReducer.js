@@ -1,6 +1,5 @@
 const notificationReducer = (state={type:'',content:''},action)=>{
-    console.log('state now: ', state)
-    console.log('action', action)
+
     switch (action.type) {
         case 'SETNOTIFICATION':
             clearTimeout(state.timer)

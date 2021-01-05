@@ -44,7 +44,7 @@ export const likeBlog= (id,updated)=>{
         await blogService.update(id,updated)
         dispatch({
             type:'LIKE',
-            data:id
+            data:{id,updated}
         })
     }
 }
