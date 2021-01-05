@@ -4,11 +4,12 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import Notification from './components/Notification'
+import Navigation from './components/Navigation'
 import UserList from './components/UserList'
 import User  from './components/User'
 import {init} from './reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from './reducers/loginReducer'
+// import { logout } from './reducers/loginReducer'
 import { getUsers} from './reducers/userReducer'
 import { BrowserRouter as Router, Switch, Route, Link, useHistory } from 'react-router-dom'
 import BlogView from './components/BlogView'
@@ -21,12 +22,13 @@ const App = () => {
     dispatch(getUsers())
   }, [dispatch])
   
-  const handleLogout = () => {
-    dispatch(logout())
-  }
+  // const handleLogout = () => {
+  //   dispatch(logout())
+  // }
 
   return (
     <Router>
+      {useraccount? <Navigation/>:''}
       <div className='blogs'>
         <h1>blogs</h1>
         <div className='notification'><Notification/></div>
@@ -36,7 +38,7 @@ const App = () => {
           </div>
           :
           <div>
-            <p>{useraccount.name} logged in <button className='btnLogout' onClick={handleLogout}>log out</button></p>
+            
             <Switch>
               <Route path='/' exact>
                 <BlogForm/>

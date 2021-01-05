@@ -7,6 +7,14 @@
 button{
   width: fit-content;
   text-align: center;
+  background-color: #fff;
+  border: 1px #000000 solid;
+  border-radius: 5px;
+  height: 1.5rem;
+  line-height: 1rem;
+  font-size: 1rem;
+  padding: 5px 8px;
+  margin: 0 10px;
 }
 .user{
   margin-bottom: 1rem;
@@ -44,4 +52,15 @@ button{
 .loginbox{
   display: flex;
   flex-direction: column-reverse;
+}
+
+.nav{
+  background-color: rgb(158, 158, 158);
+  line-height: 2rem;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+}
+.nav>*{
+  margin-left: 10px;
 }
