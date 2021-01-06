@@ -52,4 +52,12 @@ const allUsers = async () =>{
   return res.data
 }
 
-export default { getAll, login, create, update, setToken, remove, allUsers }
+const addComment = async (id, comment) =>{
+  const config = {
+    headers: { Authorization: token },
+  }
+  const res = await axios.post(`${baseUrl}blogs/${id}/comments`,{comment},config)
+  return res.data
+}
+
+export default { getAll, login, create, update, setToken, remove, allUsers, addComment }

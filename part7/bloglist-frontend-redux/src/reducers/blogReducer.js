@@ -5,16 +5,23 @@ const blogReducer = (state = [], action)=>{
         case 'ADD':
             return [...state,action.data]
         case 'DELETE':
-            const res = state.filter(blog=>blog.id!==action.data)
+            var res = state.filter(blog=>blog.id!==action.data)
             return res
         case 'LIKE':
-            const target = state.find(blog=> blog.id===action.data.id)
-            const updatedTaget = {...target,likes:target.likes+1}
+            var target = state.find(blog=> blog.id===action.data.id)
+            var updatedTaget = {...target,likes:target.likes+1}
             return state.map(item=>
                 item.id === action.data.id ? updatedTaget : item 
             )
         case'INIT':
             return action.data
+        case 'COMMENT':
+            var target = state.find(blog=>blog.id === action.data.id)
+            var comments = target.comments
+            var updated = {...target,comments:comments.push(action.data.comment)}
+            return state.map(item=>
+                item.id === action.data.id ? updated : item 
+            )
         default:
             return state
     }
@@ -49,14 +56,23 @@ export const likeBlog= (id,updated)=>{
     }
 }
 export const init = ()=>{
-    console.log('init')
     return async dispatch => {
         const blogs = await blogService.getAll()
-        console.log('init',blogs)
         dispatch({
             type: 'INIT',
             data: blogs,
         })
     }
 }
+
+export const commentOn = (id, comment) =>{
+    return async dispatch  => {
+        await blogService.addComment(id, comment)
+        dispatch({
+            type:'COMMENT',
+            data:{id,comment}
+        })
+    }
+}
+
 export default blogReducer
