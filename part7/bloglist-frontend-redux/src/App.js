@@ -29,7 +29,7 @@ const App = () => {
   return (
     <Router>
       {useraccount? <Navigation/>:''}
-      <div className='blogs'>
+      <div className='app'>
         <h1>blogs</h1>
         <div className='notification'><Notification/></div>
         {useraccount === null ?

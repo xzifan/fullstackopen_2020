@@ -3,6 +3,7 @@ import {addBlog} from '../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 import Togglable from './Togglable'
 import {set as setNotification } from '../reducers/notificationReducer'
+import {Button, Form, Input} from 'antd'
 
 const BlogForm = () => {
   const [form,setForm] = useState({title:'',author:'',url:''})
@@ -24,20 +25,29 @@ const BlogForm = () => {
       [e.target.name]:e.target.value
     })
   }
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 4 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 18 },
+    },
+  };
   const blogFormRef = useRef()
   return (
-    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <div>
+    <div className='create'>
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <h2>Create a new blog</h2>
-
-        <form onSubmit={onSubmit} className='form blog'>
-          <label>title:<input type='text' name='title' value={form.title} onChange={handleChange} /></label>
-          <label>author:<input type='text' name='author' value={form.author} onChange={handleChange}/></label>
-          <label>url:<input type='text' name='url' value={form.url} onChange={handleChange}/></label>
-          <button type="submit">save</button>
-        </form>
-      </div>
+        <Form {...formItemLayout} onSubmit={onSubmit} className='form blog'>
+          <Form.Item label='title'><Input type='text' name='title' value={form.title} onChange={handleChange} /></Form.Item>
+          <Form.Item label='author'><Input type='text' name='author' value={form.author} onChange={handleChange}/></Form.Item>
+          <Form.Item label='url'><Input type='text' name='url' value={form.url} onChange={handleChange}/></Form.Item>
+          <Form.Item><Button type="submit">save</Button></Form.Item>
+        </Form>
     </Togglable>
+    </div>
   )
 }
 

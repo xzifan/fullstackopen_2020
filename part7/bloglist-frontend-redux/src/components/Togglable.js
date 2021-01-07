@@ -1,5 +1,6 @@
 import React, { useState, useImperativeHandle  } from 'react'
 import PropTypes from 'prop-types'
+import {Button} from 'antd'
 
 const Togglable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false)
@@ -17,8 +18,8 @@ const Togglable = React.forwardRef((props, ref) => {
   })
   return (
     <React.Fragment >
-      <button style={hideWhenVisible} className='toggleButton show' onClick={toggleVisibility}>{props.buttonLabel}</button>
-      <button style={showWhenVisible} className='toggleButton hide' onClick={toggleVisibility}>{props.cancelLabel ||'cancel'}</button>
+      <Button style={hideWhenVisible} className='toggleButton show' onClick={toggleVisibility}>{props.buttonLabel}</Button>
+      <Button style={showWhenVisible} className='toggleButton hide' onClick={toggleVisibility}>{props.cancelLabel ||'cancel'}</Button>
       {visible? <div >{props.children}</div>:<div style={{ display:'none' }}>{props.children}</div>}
     </React.Fragment >
   )

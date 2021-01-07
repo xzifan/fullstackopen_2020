@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { set as setNotification} from '../reducers/notificationReducer'
 import { likeBlog } from '../reducers/blogReducer'
 import blogService from '../services/blogs'
+import {Button, Card, Input, Icon,Form, Divider} from 'antd'
 
 const BlogView = ()=>{
     const [comment,setComment] = useState() 
@@ -27,19 +28,20 @@ const BlogView = ()=>{
         setComment(e.target.value)
     }
     if (blog){
-        return(<div>
-            <h3>{blog.title}</h3>
+        return(<Card title={blog.title}>
             <div>{blog.url}</div>
-            <div>{blog.likes} likes <button onClick={(e)=>onClickLike(e,blog.id,{ title:blog.title, author:blog.author, url:blog.url,likes:blog.likes+1 })}>like</button></div>
+            <div>{blog.likes} likes <Button size='small' onClick={(e)=>onClickLike(e,blog.id,{ title:blog.title, author:blog.author, url:blog.url,likes:blog.likes+1 })}><Icon type="like" /></Button></div>
             <div>added by {blog.author}</div>
-            <h4>comments</h4>
-            <form onSubmit={onHandleComment}>
-                <input type='text' onChange={onChange}/> <button type='submit'>add comment</button>
-            </form>
+            <Divider />
+            <h3>comments</h3>
+            <Form onSubmit={onHandleComment} layout='inline'>
+                <Form.Item><Input size='small' type='text' onChange={onChange}/></Form.Item> 
+                <Form.Item><Button size='small' type='submit'>add comment</Button></Form.Item>
+            </Form>
             <ul>
                 {blog.comments.map((comment,idx)=><li key={idx}>{comment}</li>)}
             </ul>
-        </div>)
+        </Card>)
     } else return null
 }
 export default BlogView

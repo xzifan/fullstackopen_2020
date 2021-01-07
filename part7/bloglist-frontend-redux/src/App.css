@@ -1,3 +1,15 @@
+@import '~antd/dist/antd.css';
+.app{
+  width: 60%;
+  margin: 30px 20%;
+}
+h1,h2{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: 800;
+}
+form>.ant-row{
+  margin-bottom: 6px;
+}
 .form{
   display: flex;
   flex-direction: column;
@@ -10,11 +22,6 @@ button{
   background-color: #fff;
   border: 1px #000000 solid;
   border-radius: 5px;
-  height: 1.5rem;
-  line-height: 1rem;
-  font-size: 1rem;
-  padding: 5px 8px;
-  margin: 0 10px;
 }
 .user{
   margin-bottom: 1rem;
@@ -43,15 +50,26 @@ button{
   margin: 5px;
   padding: 5px;
 }
-
+.form.blog{
+  width: 300px;
+}
 .create{
   display: flex;
   flex-direction: column-reverse;
+  margin-bottom: 24px;
 }
 
 .loginbox{
   display: flex;
   flex-direction: column-reverse;
+  width: 300px;
+  padding: 20px;
+  border: 1px solid rgb(219, 219, 219);
+  border-radius: 10px;
+}
+
+.notification{
+  margin: 10px 0;
 }
 
 .nav{
